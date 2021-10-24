@@ -1,0 +1,6 @@
+name: "node-template"
+description: "node example plugin"
+tags:
+  - node
+  - shell
+provider: "blink"
