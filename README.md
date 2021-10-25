@@ -16,7 +16,7 @@ an action that takes two numbers as input params and returns the sum of those tw
 name: "sum"
 description: "sum two numbers"
 enabled: true
-entry_point: "sum.sh"
+entry_point: "run_node.sh"
 parameters:
   first:
     type: "int"
@@ -29,24 +29,30 @@ parameters:
 ```
 
 Next, place the script you want to expose by this action (see the entry_point value above):
-
+In this case we are going to call a node script (app.js)
 ```shell
-# sum.sh
+# run_node.sh
 #!/bin/sh
-sum=$(( $INPUT_FIRST + $INPUT_SECOND ))
-echo "Sum is: $sum"
+node app.js
+
+```
+And this is the node script (app.js - also under the actions folder)
+```javascript
+var first = process.env.INPUT_FIRST;
+var second = process.env.INPUT_SECOND;
+console.log("Sum: "+ (parseInt(first) + parseInt(second)));
 ```
 
 ## Build the plugin
 You can build a docker version of the plugin in the next way:
 ```shell
- docker build -f build/Dockerfile . -t "blink-shell-plugin:1.0.1"  
+ docker build -f build/Dockerfile . -t "blink-node-plugin:1.0.1"  
 ```
 
 ## Run the plugin
 You can run now the plugin via the next command:
 ```shell
-docker run -dp 1337:1337 blink-shell-plugin:1.0.1
+docker run -dp 1337:1337 blink-node-plugin:1.0.1
 ```
 This plugin will listen for incoming commands on port 1337
 
@@ -78,21 +84,6 @@ Assuming you have the blink plugin-cli (https://github.com/blinkops/blink-cli) y
             "type": "int",
             "required": true,
             "description": "second number"
-          }
-        }
-      ]
-    },
-    {
-      "name": "bash",
-      "description": "Run bash command",
-      "active": true,
-      "parameters": [
-        {
-          "field": {
-            "name": "cmd",
-            "type": "string",
-            "required": true,
-            "description": "bash command to run"
           }
         }
       ]
